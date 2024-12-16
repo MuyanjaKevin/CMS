@@ -1,0 +1,37 @@
+## YAML Template.
+version: '3.8'
+services:
+  mycomputersystem:
+    container_name: mycomputersystem
+    build: .
+    ports:
+      - "5555:80"
+    environment:
+      - "MYSQL_HOST=mydb"
+      - "MYSQL_PASSWORD=6%b48fCbUNZPfnQ"
+  database:
+    container_name: mydb
+    image: mysql:8.2.0
+    environment:
+      - "MYSQL_ROOT_PASSWORD=6%b48fCbUNZPfnQ"
+    volumes:
+      - my-data-volume:/var/lib/mysql
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      - "MYSQL_ROOT_PASSWORD=6%b48fCbUNZPfnQ"
+      - "PMA_HOST=mydb"
+  phpunit:
+    container_name: phpunit
+    build: .
+    volumes:
+      - .:/var/www/html
+    command: vendor/bin/phpunit --testdox
+    depends_on:
+      - database
+
+volumes:
+  my-data-volume:
